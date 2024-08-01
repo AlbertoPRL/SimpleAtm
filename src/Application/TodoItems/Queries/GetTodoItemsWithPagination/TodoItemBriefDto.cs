@@ -1,21 +1,21 @@
-﻿using SimpleAtm.Domain.Entities;
+﻿//using SimpleAtm.Domain.Entities;
 
-namespace SimpleAtm.Application.TodoItems.Queries.GetTodoItemsWithPagination;
-public class TodoItemBriefDto
-{
-    public int Id { get; init; }
+//namespace SimpleAtm.Application.TodoItems.Queries.GetTodoItemsWithPagination;
+//public class TodoItemBriefDto
+//{
+//    public int Id { get; init; }
 
-    public int ListId { get; init; }
+//    public int ListId { get; init; }
 
-    public string? Title { get; init; }
+//    public string? Title { get; init; }
 
-    public bool Done { get; init; }
+//    public bool Done { get; init; }
 
-    private class Mapping : Profile
-    {
-        public Mapping()
-        {
-            CreateMap<TodoItem, TodoItemBriefDto>();
-        }
-    }
-}
+//    private class Mapping : Profile
+//    {
+//        public Mapping()
+//        {
+//            CreateMap<TodoItem, TodoItemBriefDto>();
+//        }
+//    }
+//}

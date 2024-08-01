@@ -1,31 +1,31 @@
-﻿using SimpleAtm.Application.Common.Interfaces;
-using SimpleAtm.Domain.Entities;
+﻿//using SimpleAtm.Application.Common.Interfaces;
+//using SimpleAtm.Domain.Entities;
 
-namespace SimpleAtm.Application.TodoLists.Commands.CreateTodoList;
-public record CreateTodoListCommand : IRequest<int>
-{
-    public string? Title { get; init; }
-}
+//namespace SimpleAtm.Application.TodoLists.Commands.CreateTodoList;
+//public record CreateTodoListCommand : IRequest<int>
+//{
+//    public string? Title { get; init; }
+//}
 
-public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListCommand, int>
-{
-    private readonly IApplicationDbContext _context;
+//public class CreateTodoListCommandHandler : IRequestHandler<CreateTodoListCommand, int>
+//{
+//    private readonly IApplicationDbContext _context;
 
-    public CreateTodoListCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
+//    public CreateTodoListCommandHandler(IApplicationDbContext context)
+//    {
+//        _context = context;
+//    }
 
-    public async Task<int> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
-    {
-        var entity = new TodoList();
+//    public async Task<int> Handle(CreateTodoListCommand request, CancellationToken cancellationToken)
+//    {
+//        var entity = new TodoList();
 
-        entity.Title = request.Title;
+//        entity.Title = request.Title;
 
-        _context.TodoLists.Add(entity);
+//        _context.TodoLists.Add(entity);
 
-        await _context.SaveChangesAsync(cancellationToken);
+//        await _context.SaveChangesAsync(cancellationToken);
 
-        return entity.Id;
-    }
-}
+//        return entity.Id;
+//    }
+//}

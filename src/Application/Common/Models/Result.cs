@@ -11,6 +11,7 @@ public class Result
     public bool Succeeded { get; init; }
 
     public string[] Errors { get; init; }
+    public string? AuthenticationToken { get; init; }
 
     public static Result Success()
     {

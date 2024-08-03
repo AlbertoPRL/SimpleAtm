@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SimpleAtm.Application.Common.Interfaces;
@@ -8,17 +10,23 @@ namespace SimpleAtm.Infrastructure.Identity;
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
+    private readonly IAuthenticationService _authenticationService;
 
     public IdentityService(
         UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-        IAuthorizationService authorizationService)
+        IAuthorizationService authorizationService,
+        IAuthenticationService authenticationService)
     {
         _userManager = userManager;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
+        _signInManager = signInManager;
+        _authenticationService = authenticationService;
     }
 
     public async Task<string?> GetUserNameAsync(string userId)
@@ -62,6 +70,14 @@ public class IdentityService : IIdentityService
         var result = await _authorizationService.AuthorizeAsync(principal, policyName);
 
         return result.Succeeded;
+    }
+
+    //This SigninAsync method works with cookies
+    public async Task<Result> SignInAsync(string userName, string password, bool isPersistent)
+    {
+        var result = await _signInManager.PasswordSignInAsync(userName, password, isPersistent, lockoutOnFailure: false);
+
+        return result.Succeeded ? Result.Success() : Result.Failure(new string[] {"Error trying to signIn."});
     }
 
     public async Task<Result> DeleteUserAsync(string userId)

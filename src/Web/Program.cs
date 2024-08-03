@@ -56,6 +56,9 @@ app.UseExceptionHandler(options => { });
 
 app.MapGraphQL();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.Run();
 
 public partial class Program { }

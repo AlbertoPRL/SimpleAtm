@@ -1,4 +1,5 @@
-﻿using SimpleAtm.Application.Common.Models;
+﻿using System.Net.Http;
+using SimpleAtm.Application.Common.Models;
 
 namespace SimpleAtm.Application.Common.Interfaces;
 public interface IIdentityService

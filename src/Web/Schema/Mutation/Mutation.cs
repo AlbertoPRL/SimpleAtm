@@ -1,4 +1,6 @@
-﻿using SimpleAtm.Application.Common.Interfaces;
+﻿using Microsoft.AspNetCore.Authentication;
+using SimpleAtm.Application.Common.Interfaces;
+using SimpleAtm.Web.Schema.Mutation.Login;
 using SimpleAtm.Web.Schema.Mutation.User;
 
 namespace SimpleAtm.Web.Schema.Mutation;
@@ -16,5 +18,10 @@ public class Mutation
         {
             return new CreateUserAccountPayload(400, response.Result.Errors, false, null);
         }
+    }
+
+    public async Task<LoginPayload> Login(LoginInput input, [Service] IIdentityService identityService)
+    {
+       var response = await identityService.
     }
 }

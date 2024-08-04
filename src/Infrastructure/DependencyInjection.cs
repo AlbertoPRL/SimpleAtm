@@ -70,6 +70,7 @@ public static class DependencyInjection
             .AddIdentityCore<ApplicationUser>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddSignInManager<SignInManager<ApplicationUser>>()
             .AddApiEndpoints();
 
         services.AddSingleton(TimeProvider.System);

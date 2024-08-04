@@ -7,7 +7,9 @@ namespace SimpleAtm.Web.Schema.Mutation;
 
 public class Mutation
 {
-    public async Task<CreateUserAccountPayload> CreateAccount(CreateUserAccountInput input, [Service] IIdentityService identityService)
+    public async Task<CreateUserAccountPayload> CreateAccount(
+        CreateUserAccountInput input,
+        [Service] IIdentityService identityService)
     {
         var response = await identityService.CreateUserAsync(input.UserName, input.Password);
         if(response.Result.Succeeded)
@@ -20,8 +22,15 @@ public class Mutation
         }
     }
 
-    public async Task<LoginPayload> Login(LoginInput input, [Service] IIdentityService identityService)
+    public async Task<LoginPayload> Login(
+        LoginInput input,
+        [Service] IIdentityService identityService)
     {
-       var response = await identityService.
+        var result = await identityService.SignInAsync(input.UserName, input.Password);
+        if (result.Succeeded)
+        {
+            return new LoginPayload(200, result.Errors, true, result.Token);
+        }
+        return new LoginPayload(400, result.Errors, false, result.Token);      
     }
 }

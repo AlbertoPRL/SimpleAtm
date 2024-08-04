@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Folder Include="Schema\Subscription\" />
+    <Folder Include="Services\Abstractions\" />
   </ItemGroup>
 
 

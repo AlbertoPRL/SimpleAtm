@@ -1,8 +1,5 @@
 ﻿using Azure.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-//using NSwag;
-//using NSwag.Generation.Processors.Security;
 using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Infrastructure.Data;
 using SimpleAtm.Infrastructure.Identity;

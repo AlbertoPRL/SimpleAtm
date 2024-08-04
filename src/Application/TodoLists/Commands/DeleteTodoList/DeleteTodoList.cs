@@ -1,27 +1,27 @@
-﻿using SimpleAtm.Application.Common.Interfaces;
+﻿//using SimpleAtm.Application.Common.Interfaces;
 
-namespace SimpleAtm.Application.TodoLists.Commands.DeleteTodoList;
-public record DeleteTodoListCommand(int Id) : IRequest;
+//namespace SimpleAtm.Application.TodoLists.Commands.DeleteTodoList;
+//public record DeleteTodoListCommand(int Id) : IRequest;
 
-public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListCommand>
-{
-    private readonly IApplicationDbContext _context;
+//public class DeleteTodoListCommandHandler : IRequestHandler<DeleteTodoListCommand>
+//{
+//    private readonly IApplicationDbContext _context;
 
-    public DeleteTodoListCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
+//    public DeleteTodoListCommandHandler(IApplicationDbContext context)
+//    {
+//        _context = context;
+//    }
 
-    public async Task Handle(DeleteTodoListCommand request, CancellationToken cancellationToken)
-    {
-        var entity = await _context.TodoLists
-            .Where(l => l.Id == request.Id)
-            .SingleOrDefaultAsync(cancellationToken);
+//    public async Task Handle(DeleteTodoListCommand request, CancellationToken cancellationToken)
+//    {
+//        var entity = await _context.TodoLists
+//            .Where(l => l.Id == request.Id)
+//            .SingleOrDefaultAsync(cancellationToken);
 
-        Guard.Against.NotFound(request.Id, entity);
+//        Guard.Against.NotFound(request.Id, entity);
 
-        _context.TodoLists.Remove(entity);
+//        _context.TodoLists.Remove(entity);
 
-        await _context.SaveChangesAsync(cancellationToken);
-    }
-}
+//        await _context.SaveChangesAsync(cancellationToken);
+//    }
+//}

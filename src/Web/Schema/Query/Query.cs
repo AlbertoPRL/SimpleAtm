@@ -1,6 +1,11 @@
-﻿namespace SimpleAtm.Web.Schema.Query;
+﻿using SimpleAtm.Infrastructure.Identity;
+
+namespace SimpleAtm.Web.Schema.Query;
 
 public class Query
 {
-    public string Hello() => "Hello, World!";
+   public string GetUser([Service] IdentityService identityService)
+    {
+        return "identityService.GetUserNameAsync();";
+    }
 }

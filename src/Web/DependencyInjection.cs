@@ -1,9 +1,11 @@
 ﻿using Azure.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NSwag;
-using NSwag.Generation.Processors.Security;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+//using NSwag;
+//using NSwag.Generation.Processors.Security;
 using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Infrastructure.Data;
+using SimpleAtm.Infrastructure.Identity;
 using SimpleAtm.Web.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -30,21 +32,21 @@ public static class DependencyInjection
 
         services.AddEndpointsApiExplorer();
 
-        services.AddOpenApiDocument((configure, sp) =>
-        {
-            configure.Title = "SimpleAtm API";
+        //services.AddOpenApiDocument((configure, sp) =>
+        //{
+        //    configure.Title = "SimpleAtm API";
 
-            // Add JWT
-            configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
-            {
-                Type = OpenApiSecuritySchemeType.ApiKey,
-                Name = "Authorization",
-                In = OpenApiSecurityApiKeyLocation.Header,
-                Description = "Type into the textbox: Bearer {your JWT token}."
-            });
+        //    // Add JWT
+        //    configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+        //    {
+        //        Type = OpenApiSecuritySchemeType.ApiKey,
+        //        Name = "Authorization",
+        //        In = OpenApiSecurityApiKeyLocation.Header,
+        //        Description = "Type into the textbox: Bearer {your JWT token}."
+        //    });
 
-            configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
-        });
+        //    configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+        //});
 
         return services;
     }
@@ -62,3 +64,4 @@ public static class DependencyInjection
         return services;
     }
 }
+

@@ -1,4 +1,5 @@
-﻿using SimpleAtm.Application.Common.Models;
+﻿using System.Net.Http;
+using SimpleAtm.Application.Common.Models;
 
 namespace SimpleAtm.Application.Common.Interfaces;
 public interface IIdentityService
@@ -12,4 +13,6 @@ public interface IIdentityService
     Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
 
     Task<Result> DeleteUserAsync(string userId);
+
+    Task<ApplicationSignInResult> SignInAsync(string userName, string password);
 }

@@ -1,39 +1,34 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using SimpleAtm.Application.Common.Exceptions;
 using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Application.Common.Models;
+using SimpleAtm.Infrastructure.Services;
 
 namespace SimpleAtm.Infrastructure.Identity;
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    //private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
     private readonly IConfiguration _configuration;
+    private readonly LogInServices _logInServices;
 
     public IdentityService(
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
+        //SignInManager<ApplicationUser> signInManager,
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
         IAuthorizationService authorizationService,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        LogInServices logInServices)
     {
         _userManager = userManager;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
-        _signInManager = signInManager;
+        //_signInManager = signInManager;
         _configuration = configuration;
+        _logInServices = logInServices;
     }
 
     public async Task<string?> GetUserNameAsync(string userId)
@@ -91,7 +86,8 @@ public class IdentityService : IIdentityService
         {
             return ApplicationSignInResult.Failure(new string[] { "Invalid password/Email.", });
         }
-        var token = GenerateJwtToken(userName, user.Id);
+       //var canSignIn = _signInManager.CanSignInAsync(user);
+        var token = _logInServices.GenerateJwtToken(userName, user.Id);
         return new ApplicationSignInResult(true, token);
     }
 
@@ -100,6 +96,7 @@ public class IdentityService : IIdentityService
         var user = await _userManager.FindByIdAsync(userId);
 
         return user != null ? await DeleteUserAsync(user) : Result.Success();
+        
     }
 
     public async Task<Result> DeleteUserAsync(ApplicationUser user)
@@ -109,30 +106,64 @@ public class IdentityService : IIdentityService
         return result.ToApplicationResult();
     }
 
-    public string GenerateJwtToken(string userName, string userId)
-    {
-        var jwtSettings = _configuration.GetSection("JwtSettings");
-        var secretKey = jwtSettings["SecretKey"];
-        if (string.IsNullOrEmpty(secretKey))
-        {
-            throw new TokenConfigurationException("Secret key is missing.");
-        }
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(secretKey);
+    //public string GenerateJwtToken(string userName, string userId)
+    //{
+    //    var jwtSettings = _configuration.GetSection("JwtSettings");
+    //    var secretKey = jwtSettings["SecretKey"];
+    //    if (string.IsNullOrEmpty(secretKey))
+    //    {
+    //        throw new TokenConfigurationException("Secret key is missing.");
+    //    }
+    //    var tokenHandler = new JwtSecurityTokenHandler();
+    //    var key = Encoding.ASCII.GetBytes(secretKey);
 
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                new Claim(ClaimTypes.Name, userName.ToString()),
-            }),
-            Expires = DateTime.UtcNow.AddMinutes(20),
-            Issuer = _configuration["JwtSettings:Issuer"],
-            Audience = _configuration["JwtSettings:Audience"],
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
-    }
+    //    var tokenDescriptor = new SecurityTokenDescriptor
+    //    {
+    //        Subject = new ClaimsIdentity(new Claim[]
+    //        {
+    //            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+    //            new Claim(ClaimTypes.Name, userName.ToString()),
+    //        }),
+    //        Expires = DateTime.UtcNow.AddMinutes(20),
+    //        Issuer = _configuration["JwtSettings:Issuer"],
+    //        Audience = _configuration["JwtSettings:Audience"],
+    //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+    //    };
+    //    var token = tokenHandler.CreateToken(tokenDescriptor);
+    //    return tokenHandler.WriteToken(token);
+    //}
+    //public string GenerateJwtToken(string userName, string userId)
+    //{
+    //    var jwtSettings = _configuration.GetSection("JwtSettings");
+    //    var secretKey = jwtSettings["SecretKey"];
+    //    if (string.IsNullOrEmpty(secretKey))
+    //    {
+    //        throw new TokenConfigurationException("Secret key is missing.");
+    //    }
+    //    var tokenHandler = new JwtSecurityTokenHandler();
+    //    var key = Encoding.ASCII.GetBytes(secretKey);
+
+    //    var credentials = new SigningCredentials(
+    //        new SymmetricSecurityKey(key),
+    //        SecurityAlgorithms.HmacSha256);
+
+    //    var tokenDescriptor = new SecurityTokenDescriptor
+    //    {
+    //        SigningCredentials = credentials,
+    //        Expires = DateTime.UtcNow.AddHours(1),
+    //        Subject = GenerateClaims(userName, userId)
+    //    };
+
+    //    var token = tokenHandler.CreateToken(tokenDescriptor);
+    //    return tokenHandler.WriteToken(token);
+    //}
+    //private static ClaimsIdentity GenerateClaims(string userName, string userId)
+    //{
+    //    var ci = new ClaimsIdentity();
+
+    //    ci.AddClaim(new Claim("id", userId.ToString()));
+    //    ci.AddClaim(new Claim(ClaimTypes.Name, userName));
+
+    //    return ci;
+    //}
 }

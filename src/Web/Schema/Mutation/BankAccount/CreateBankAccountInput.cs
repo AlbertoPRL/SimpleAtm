@@ -1,3 +1,11 @@
 ﻿namespace SimpleAtm.Web.Schema.Mutation.BankAccount;
 
-public record CreateBankAccountInput{}
+public class CreateBankAccountInput 
+{
+    public bool CreationConfirmed { get; set; }
+    public CreateBankAccountInput(bool creationConfirmed)
+    {
+        CreationConfirmed = creationConfirmed;
+    }
+}
+

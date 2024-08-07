@@ -1,4 +1,5 @@
-﻿using SimpleAtm.Application.Common.Interfaces;
+﻿using HotChocolate.Authorization;
+using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Web.Schema.Mutation.BankAccount;
 using SimpleAtm.Web.Schema.Mutation.Login;
 using SimpleAtm.Web.Schema.Mutation.User;
@@ -34,6 +35,7 @@ public class Mutation
         return new LoginPayload(400, result.Errors, false, result.Token);      
     }
 
+    //[Authorize]
     public async Task<CreateBankAccountPayload> CreateBankAccount(
         CreateBankAccountInput input,
         [Service] IBankAccountRepository bankAccountRepository,
@@ -52,7 +54,7 @@ public class Mutation
             }
             else
             {
-                return new CreateBankAccountPayload(string.Empty, 0, 400, result.Succeeded);
+                return new CreateBankAccountPayload("No user id Found", 0, 400, result.Succeeded);
             }
         }
         return new CreateBankAccountPayload(string.Empty, 0, 400, false);

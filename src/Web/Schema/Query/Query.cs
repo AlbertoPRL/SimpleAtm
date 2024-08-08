@@ -21,4 +21,23 @@ public class Query
         });
         return bankAccountInfos;
     }
+
+    [Authorize]
+    [UseProjection]
+    public BankAccountInfo GetAccountByAccountNumber(
+               [Service] ApplicationDbContext applicationDbContext,
+                      string accountNumber)
+    {
+        var bankAccount = applicationDbContext.BankAccounts
+            .FirstOrDefault(ba => ba.AccountNumber == accountNumber);
+        if (bankAccount == null)
+        {
+            throw new Exception("Bank Account not found");
+        }
+        return new BankAccountInfo
+        {
+            AccountNumber = bankAccount.AccountNumber,
+            Balance = bankAccount.Balance
+        };
+    }
 }

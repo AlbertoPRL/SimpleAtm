@@ -1,6 +1,4 @@
 using SimpleAtm.Infrastructure.Data;
-using SimpleAtm.Web.Schema.Mutation;
-using SimpleAtm.Web.Schema.Query;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,12 +8,6 @@ builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
-
-builder.Services.AddGraphQLServer()
-   // .AddDefaultTransactionScopeHandler()
-    .RegisterDbContext<ApplicationDbContext>()
-    .AddQueryType<Query>()
-    .AddMutationType<Mutation>();
 
 var app = builder.Build();
 
@@ -50,13 +42,12 @@ app.UseStaticFiles();
 
 app.UseExceptionHandler(options => { });
 
-//app.Map("/", () => Results.Redirect("/api"));
+app.Map("/", () => Results.Redirect("/graphql"));
+
 
 //app.MapEndpoints();
-
-app.MapGraphQL();
-
 app.UseAuthentication();
+app.MapGraphQL();
 app.UseAuthorization();
 
 app.Run();

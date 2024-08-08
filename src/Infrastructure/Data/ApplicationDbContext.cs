@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using System.Reflection.Emit;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SimpleAtm.Application.BankAccount;
 using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Domain.Entities;
 using SimpleAtm.Infrastructure.Identity;
@@ -17,5 +19,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        
+        builder.Entity<BankAccount>()
+                .HasKey(bankAccount => bankAccount.AccountNumber);
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleAtm.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SimpleAtm.Infrastructure.Data;
 namespace SimpleAtm.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240804201428_ModelChanges")]
+    partial class ModelChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,18 +160,20 @@ namespace SimpleAtm.Infrastructure.Migrations
 
             modelBuilder.Entity("SimpleAtm.Domain.Entities.BankAccount", b =>
                 {
-                    b.Property<string>("AccountNumber")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccountNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Balance")
                         .HasColumnType("float");
 
-                    b.HasKey("AccountNumber");
-
-                    b.HasIndex("ApplicationUserId");
+                    b.HasKey("Id");
 
                     b.ToTable("BankAccounts");
                 });
@@ -287,18 +292,6 @@ namespace SimpleAtm.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SimpleAtm.Domain.Entities.BankAccount", b =>
-                {
-                    b.HasOne("SimpleAtm.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany("BankAccounts")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
-            modelBuilder.Entity("SimpleAtm.Infrastructure.Identity.ApplicationUser", b =>
-                {
-                    b.Navigation("BankAccounts");
                 });
 #pragma warning restore 612, 618
         }

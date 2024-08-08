@@ -1,11 +1,9 @@
 ﻿using Azure.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-//using NSwag;
-//using NSwag.Generation.Processors.Security;
 using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Infrastructure.Data;
-using SimpleAtm.Infrastructure.Identity;
+using SimpleAtm.Web.Schema.Mutation;
+using SimpleAtm.Web.Schema.Query;
 using SimpleAtm.Web.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -13,6 +11,14 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddWebServices(this IServiceCollection services)
     {
+        services.AddGraphQLServer()
+                // .AddDefaultTransactionScopeHandler()
+                .RegisterDbContext<ApplicationDbContext>()
+                .AddQueryType<Query>()
+                .AddMutationType<Mutation>()
+                .AddAuthorization()
+                .AddProjections();
+
         services.AddDatabaseDeveloperPageExceptionFilter();
 
         services.AddScoped<IUser, CurrentUser>();
@@ -24,13 +30,13 @@ public static class DependencyInjection
 
         services.AddExceptionHandler<CustomExceptionHandler>();
 
-        services.AddRazorPages();
+       // services.AddRazorPages();
 
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
 
-        services.AddEndpointsApiExplorer();
+       // services.AddEndpointsApiExplorer();
 
         //services.AddOpenApiDocument((configure, sp) =>
         //{

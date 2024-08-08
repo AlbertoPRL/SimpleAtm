@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SimpleAtm.Domain.Entities;
-public class BankAccount : BaseEntity
+﻿namespace SimpleAtm.Domain.Entities;
+public class BankAccount
 {
-    public long AccountNumber { get; set; }
-    public float Balance { get; set; }
-    public int Pin { get; set; }
+    public string AccountNumber { get; set; } = null!;
+    public double Balance { get; set; }
 }

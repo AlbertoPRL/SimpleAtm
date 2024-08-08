@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-
-using SimpleAtm.Application.Common.Interfaces;
+﻿using SimpleAtm.Application.Common.Interfaces;
 
 namespace SimpleAtm.Web.Services;
 public class CurrentUser : IUser
@@ -12,5 +10,5 @@ public class CurrentUser : IUser
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public string? Id => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+    public string? Id => _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value ?? null;
 }

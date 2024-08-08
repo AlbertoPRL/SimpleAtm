@@ -16,7 +16,8 @@ public static class DependencyInjection
                 .RegisterDbContext<ApplicationDbContext>()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()
-                .AddAuthorization();
+                .AddAuthorization()
+                .AddProjections();
 
         services.AddDatabaseDeveloperPageExceptionFilter();
 

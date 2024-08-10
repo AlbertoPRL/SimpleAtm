@@ -9,20 +9,13 @@ namespace SimpleAtm.Application.BankAccount;
 public class BankAccountManager : IBankAccountManager
 {
     private readonly double InitialBalance = 100.00;
-    public Task<string> GenerateAccountNumber(string userId)
+    public string GenerateAccountNumber()
     {
-        var newGuid = Guid.NewGuid().ToString();
-        var defaultDigits = newGuid.Substring(0, 8);
-        var firstDigits = userId.Substring(0, 4);
-        var middleDigits = "0000";
-        var lastDigits = userId.Substring(userId.Length - 4, 4);
-        
-        return Task.FromResult($"{firstDigits}{defaultDigits}{middleDigits}{lastDigits}");
+        return Guid.NewGuid().ToString();
     }
-
-    public Task<double> GetInitialBalance()
+    public double GetInitialBalance()
     {
-        return Task.FromResult(InitialBalance);
+        return InitialBalance;
     }
 
     public Task<double> CheckBalance()

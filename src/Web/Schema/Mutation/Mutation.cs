@@ -35,18 +35,18 @@ public class Mutation
         return new LoginPayload(400, result.Errors, false, result.Token);      
     }
 
-    //[Authorize]
+    [Authorize]
     public async Task<CreateBankAccountPayload> CreateBankAccount(
         CreateBankAccountInput input,
         [Service] IBankAccountRepository bankAccountRepository,
-        [Service]IUser user,
+        [Service]ICurrentUser user,
         [Service] IBankAccountManager bankAccountManager)
     {
         var userId = user.Id;
         if (userId != null)
         {
-            var accountNumber = await bankAccountManager.GenerateAccountNumber(userId);
-            var balance = await bankAccountManager.GetInitialBalance();
+            var accountNumber = bankAccountManager.GenerateAccountNumber();
+            var balance = bankAccountManager.GetInitialBalance();
             var result = await bankAccountRepository.CreateBankAccount(accountNumber, balance);
             if (result.Succeeded)
             {
@@ -59,4 +59,8 @@ public class Mutation
         }
         return new CreateBankAccountPayload(string.Empty, 0, 400, false);
     }
+
+    //[Authorize]
+    //[UseProjection]
+    //public async Task<DepositPayload> Deposit
 }

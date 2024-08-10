@@ -31,14 +31,14 @@ public class IdentityService : IIdentityService
         _logInServices = logInServices;
     }
 
-    public async Task<string?> GetUserNameAsync(string userId)
+    public async Task<string?> GetUserNameAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString());
 
         return user?.UserName;
     }
 
-    public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)
+    public async Task<(Result Result, Guid UserId)> CreateUserAsync(string userName, string password)
     {
         var user = new ApplicationUser
         {
@@ -51,16 +51,16 @@ public class IdentityService : IIdentityService
         return (result.ToApplicationResult(), user.Id);
     }
 
-    public async Task<bool> IsInRoleAsync(string userId, string role)
+    public async Task<bool> IsInRoleAsync(Guid userId, string role)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString());
 
         return user != null && await _userManager.IsInRoleAsync(user, role);
     }
 
-    public async Task<bool> AuthorizeAsync(string userId, string policyName)
+    public async Task<bool> AuthorizeAsync(Guid userId, string policyName)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString());
 
         if (user == null)
         {
@@ -87,13 +87,13 @@ public class IdentityService : IIdentityService
             return ApplicationSignInResult.Failure(new string[] { "Invalid password/Email.", });
         }
        //var canSignIn = _signInManager.CanSignInAsync(user);
-        var token = _logInServices.GenerateJwtToken(userName, user.Id);
+        var token = _logInServices.GenerateJwtToken(userName, user.Id.ToString());
         return new ApplicationSignInResult(true, token);
     }
 
-    public async Task<Result> DeleteUserAsync(string userId)
+    public async Task<Result> DeleteUserAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString());
 
         return user != null ? await DeleteUserAsync(user) : Result.Success();
         
@@ -105,65 +105,4 @@ public class IdentityService : IIdentityService
 
         return result.ToApplicationResult();
     }
-
-    //public string GenerateJwtToken(string userName, string userId)
-    //{
-    //    var jwtSettings = _configuration.GetSection("JwtSettings");
-    //    var secretKey = jwtSettings["SecretKey"];
-    //    if (string.IsNullOrEmpty(secretKey))
-    //    {
-    //        throw new TokenConfigurationException("Secret key is missing.");
-    //    }
-    //    var tokenHandler = new JwtSecurityTokenHandler();
-    //    var key = Encoding.ASCII.GetBytes(secretKey);
-
-    //    var tokenDescriptor = new SecurityTokenDescriptor
-    //    {
-    //        Subject = new ClaimsIdentity(new Claim[]
-    //        {
-    //            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-    //            new Claim(ClaimTypes.Name, userName.ToString()),
-    //        }),
-    //        Expires = DateTime.UtcNow.AddMinutes(20),
-    //        Issuer = _configuration["JwtSettings:Issuer"],
-    //        Audience = _configuration["JwtSettings:Audience"],
-    //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-    //    };
-    //    var token = tokenHandler.CreateToken(tokenDescriptor);
-    //    return tokenHandler.WriteToken(token);
-    //}
-    //public string GenerateJwtToken(string userName, string userId)
-    //{
-    //    var jwtSettings = _configuration.GetSection("JwtSettings");
-    //    var secretKey = jwtSettings["SecretKey"];
-    //    if (string.IsNullOrEmpty(secretKey))
-    //    {
-    //        throw new TokenConfigurationException("Secret key is missing.");
-    //    }
-    //    var tokenHandler = new JwtSecurityTokenHandler();
-    //    var key = Encoding.ASCII.GetBytes(secretKey);
-
-    //    var credentials = new SigningCredentials(
-    //        new SymmetricSecurityKey(key),
-    //        SecurityAlgorithms.HmacSha256);
-
-    //    var tokenDescriptor = new SecurityTokenDescriptor
-    //    {
-    //        SigningCredentials = credentials,
-    //        Expires = DateTime.UtcNow.AddHours(1),
-    //        Subject = GenerateClaims(userName, userId)
-    //    };
-
-    //    var token = tokenHandler.CreateToken(tokenDescriptor);
-    //    return tokenHandler.WriteToken(token);
-    //}
-    //private static ClaimsIdentity GenerateClaims(string userName, string userId)
-    //{
-    //    var ci = new ClaimsIdentity();
-
-    //    ci.AddClaim(new Claim("id", userId.ToString()));
-    //    ci.AddClaim(new Claim(ClaimTypes.Name, userName));
-
-    //    return ci;
-    //}
 }

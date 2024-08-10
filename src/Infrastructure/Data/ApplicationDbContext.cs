@@ -1,14 +1,12 @@
 ﻿using System.Reflection;
-using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SimpleAtm.Application.BankAccount;
-using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Domain.Entities;
 using SimpleAtm.Infrastructure.Identity;
 
 namespace SimpleAtm.Infrastructure.Data;
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -19,8 +17,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        
+
         builder.Entity<BankAccount>()
-                .HasKey(bankAccount => bankAccount.AccountNumber);
+            .HasOne<ApplicationUser>()
+            .WithMany(user => user.BankAccounts)
+            .HasForeignKey(ba => ba.ApplicationUserId);
     }
 }

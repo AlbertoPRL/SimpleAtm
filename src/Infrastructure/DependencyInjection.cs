@@ -41,33 +41,6 @@ public static class DependencyInjection
 
         services.AddScoped<ApplicationDbContextInitialiser>();
 
-        //services.AddAuthentication(options =>
-        //{
-        //    options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
-        //    options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
-        //})
-        //.AddJwtBearer(IdentityConstants.BearerScheme, options =>
-        //{
-        //    var jwtSettings = configuration.GetSection("JwtSettings");
-        //    var secretKey = jwtSettings["SecretKey"];
-        //    if(string.IsNullOrEmpty(secretKey))
-        //    {
-        //        throw new TokenConfigurationException("Secret key is missing.");
-        //    }
-        //    var key = Encoding.ASCII.GetBytes(secretKey);
-
-
-        //    options.TokenValidationParameters = new TokenValidationParameters
-        //    {
-        //        ValidateIssuer = true,
-        //        ValidateAudience = true,
-        //        ValidateLifetime = true,
-        //        ValidateIssuerSigningKey = true,
-        //        ValidIssuer = jwtSettings["Issuer"],
-        //        ValidAudience = jwtSettings["Audience"],
-        //        IssuerSigningKey = new SymmetricSecurityKey(key),
-        //    };
-        //});
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -111,12 +84,9 @@ public static class DependencyInjection
         services.AddAuthorizationBuilder();
 
         services
-            .AddIdentityCore<ApplicationUser>()
-            .AddRoles<IdentityRole>()
+            .AddIdentity<ApplicationUser, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
-            //.AddSignInManager<SignInManager<ApplicationUser>>();
-            /*.AddApiEndpoints()*/
-
+            
         services.AddSingleton(TimeProvider.System);
         services.AddTransient<IIdentityService, IdentityService>();
         services.AddTransient<LogInServices, LogInServices>();

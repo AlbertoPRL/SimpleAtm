@@ -7,11 +7,11 @@ using SimpleAtm.Domain.Common;
 namespace SimpleAtm.Infrastructure.Data.Interceptors;
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
-    private readonly IUser _user;
+    private readonly ICurrentUser _user;
     private readonly TimeProvider _dateTime;
 
     public AuditableEntityInterceptor(
-        IUser user,
+        ICurrentUser user,
         TimeProvider dateTime)
     {
         _user = user;
@@ -43,10 +43,10 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
                 var utcNow = _dateTime.GetUtcNow();
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedBy = _user.Id;
+                    entry.Entity.CreatedBy = _user.Id.ToString();
                     entry.Entity.Created = utcNow;
                 }
-                entry.Entity.LastModifiedBy = _user.Id;
+                entry.Entity.LastModifiedBy = _user.Id.ToString();
                 entry.Entity.LastModified = utcNow;
             }
         }

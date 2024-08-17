@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Application.Common.Models;
 using SimpleAtm.Infrastructure.Services;
@@ -9,25 +8,19 @@ namespace SimpleAtm.Infrastructure.Identity;
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    //private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IAuthorizationService _authorizationService;
-    private readonly IConfiguration _configuration;
     private readonly LogInServices _logInServices;
 
     public IdentityService(
         UserManager<ApplicationUser> userManager,
-        //SignInManager<ApplicationUser> signInManager,
         IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
         IAuthorizationService authorizationService,
-        IConfiguration configuration,
         LogInServices logInServices)
     {
         _userManager = userManager;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         _authorizationService = authorizationService;
-        //_signInManager = signInManager;
-        _configuration = configuration;
         _logInServices = logInServices;
     }
 
@@ -86,8 +79,8 @@ public class IdentityService : IIdentityService
         {
             return ApplicationSignInResult.Failure(new string[] { "Invalid password/Email.", });
         }
-       //var canSignIn = _signInManager.CanSignInAsync(user);
-        var token = _logInServices.GenerateJwtToken(userName, user.Id.ToString());
+
+        var token = _logInServices.GenerateJwtToken(userName, user.Id);
         return new ApplicationSignInResult(true, token);
     }
 

@@ -35,7 +35,7 @@ public class Mutation
         return new LoginPayload(400, result.Errors, false, result.Token);      
     }
 
-    [Authorize]
+    //[Authorize]
     public async Task<CreateBankAccountPayload> CreateBankAccount(
         CreateBankAccountInput input,
         [Service] IBankAccountRepository bankAccountRepository,

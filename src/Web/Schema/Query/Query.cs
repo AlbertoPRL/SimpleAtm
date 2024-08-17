@@ -1,13 +1,22 @@
-﻿using HotChocolate.Authorization;
-using HotChocolate.Execution.Processing;
-using SimpleAtm.Application.Common.Interfaces;
-using SimpleAtm.Domain.Entities;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using HotChocolate.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using SimpleAtm.Infrastructure.Data;
 
 namespace SimpleAtm.Web.Schema.Query;
 
 public class Query
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IConfiguration _configuration = null!;
+    public Query(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+    {
+        _httpContextAccessor = httpContextAccessor;
+        _configuration = configuration;
+    }
+
     [Authorize]
     [UseProjection]
     public IQueryable<BankAccountInfo> GetBankAccounts(
@@ -39,5 +48,12 @@ public class Query
             AccountNumber = bankAccount.AccountNumber,
             Balance = bankAccount.Balance
         };
+    }
+
+    [Authorize]
+    public LoggedUser GetMe(ClaimsPrincipal claimsPrincipal)
+    {
+        var id = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+        return new LoggedUser { id = id ?? string.Empty };
     }
 }

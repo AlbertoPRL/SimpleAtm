@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SimpleAtm.Infrastructure.Data.Migrations
+namespace SimpleAtm.Infrastructure.Infrastructure.Data
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

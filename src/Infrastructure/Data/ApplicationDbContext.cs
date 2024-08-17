@@ -6,11 +6,11 @@ using SimpleAtm.Domain.Entities;
 using SimpleAtm.Infrastructure.Identity;
 
 namespace SimpleAtm.Infrastructure.Data;
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+
+public class ApplicationDbContext(
+    DbContextOptions<ApplicationDbContext> options)
+    : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-    }
     public DbSet<BankAccount> BankAccounts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)

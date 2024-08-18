@@ -11,12 +11,13 @@ public class BankAccountRepository : IBankAccountRepository
         _context = context;
     }
 
-    public async Task<Result> CreateBankAccount(string accountNumber, double balance)
+    public async Task<Result> CreateBankAccount(string accountNumber, double balance, Guid userId)
     {
         var bankAccount = new BankAccount
         {
             AccountNumber = accountNumber,
-            Balance = balance
+            Balance = balance,
+            ApplicationUserId = userId           
         };
         var result = _context.BankAccounts.Add(bankAccount);     
         if (result != null)

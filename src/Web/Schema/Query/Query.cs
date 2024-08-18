@@ -49,11 +49,4 @@ public class Query
             Balance = bankAccount.Balance
         };
     }
-
-    [Authorize]
-    public LoggedUser GetMe(ClaimsPrincipal claimsPrincipal)
-    {
-        var id = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-        return new LoggedUser { id = id ?? string.Empty };
-    }
 }

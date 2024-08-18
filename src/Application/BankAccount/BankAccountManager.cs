@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using SimpleAtm.Application.Common.Interfaces;
+﻿using SimpleAtm.Application.Common.Interfaces;
 
 namespace SimpleAtm.Application.BankAccount;
 public class BankAccountManager : IBankAccountManager

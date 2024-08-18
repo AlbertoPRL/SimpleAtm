@@ -19,7 +19,7 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
     public async Task Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = typeof(TRequest).Name;
-        var userId = _user.Id ?? Guid.Empty;
+        var userId = _user.Id;
         string? userName = string.Empty;
 
         if (userId != Guid.Empty)

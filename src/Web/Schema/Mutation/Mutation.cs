@@ -1,6 +1,8 @@
 ﻿using HotChocolate.Authorization;
+using SimpleAtm.Application.BankAccount;
 using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Web.Schema.Mutation.BankAccount;
+using SimpleAtm.Web.Schema.Mutation.Deposit;
 using SimpleAtm.Web.Schema.Mutation.Login;
 using SimpleAtm.Web.Schema.Mutation.User;
 
@@ -8,6 +10,7 @@ namespace SimpleAtm.Web.Schema.Mutation;
 
 public class Mutation
 {
+    [GraphQLDescription("Create a user account")]
     public async Task<CreateUserAccountPayload> CreateAccount(
         CreateUserAccountInput input,
         [Service] IIdentityService identityService)
@@ -23,6 +26,7 @@ public class Mutation
         }
     }
 
+    [GraphQLDescription("Login to the application")]
     public async Task<LoginPayload> Login(
         LoginInput input,
         [Service] IIdentityService identityService)
@@ -35,19 +39,20 @@ public class Mutation
         return new LoginPayload(400, result.Errors, false, result.Token);      
     }
 
-    //[Authorize]
+    [GraphQLDescription("Create a bank account")]
+    [Authorize]
     public async Task<CreateBankAccountPayload> CreateBankAccount(
         CreateBankAccountInput input,
         [Service] IBankAccountRepository bankAccountRepository,
-        [Service]IUser user,
+        [Service]ICurrentUser user,
         [Service] IBankAccountManager bankAccountManager)
     {
         var userId = user.Id;
-        if (userId != null)
+        if (userId != Guid.Empty)
         {
-            var accountNumber = await bankAccountManager.GenerateAccountNumber(userId);
-            var balance = await bankAccountManager.GetInitialBalance();
-            var result = await bankAccountRepository.CreateBankAccount(accountNumber, balance);
+            var accountNumber = bankAccountManager.GenerateAccountNumber();
+            var balance = bankAccountManager.GetInitialBalance();
+            var result = await bankAccountRepository.CreateBankAccount(accountNumber, balance, userId);
             if (result.Succeeded)
             {
                 return new CreateBankAccountPayload(accountNumber, balance,200, result.Succeeded);
@@ -59,4 +64,14 @@ public class Mutation
         }
         return new CreateBankAccountPayload(string.Empty, 0, 400, false);
     }
+
+    //[GraphQLDescription("Deposit money into a bank account")]
+    //[Authorize]
+    //public async Task<DepositPayload> Deposit(
+    //    DepositInput input,
+    //    [Service] BankAccountManager bankAccountManager,
+    //    [Service] ICurrentUser currentUser)
+    //{
+           
+    //}
 }

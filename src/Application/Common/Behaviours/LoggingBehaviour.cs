@@ -6,10 +6,10 @@ namespace SimpleAtm.Application.Common.Behaviours;
 public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
     private readonly ILogger _logger;
-    private readonly IUser _user;
+    private readonly ICurrentUser _user;
     private readonly IIdentityService _identityService;
 
-    public LoggingBehaviour(ILogger<TRequest> logger, IUser user, IIdentityService identityService)
+    public LoggingBehaviour(ILogger<TRequest> logger, ICurrentUser user, IIdentityService identityService)
     {
         _logger = logger;
         _user = user;
@@ -19,10 +19,10 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
     public async Task Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = typeof(TRequest).Name;
-        var userId = _user.Id ?? string.Empty;
+        var userId = _user.Id ?? Guid.Empty;
         string? userName = string.Empty;
 
-        if (!string.IsNullOrEmpty(userId))
+        if (userId != Guid.Empty)
         {
             userName = await _identityService.GetUserNameAsync(userId);
         }

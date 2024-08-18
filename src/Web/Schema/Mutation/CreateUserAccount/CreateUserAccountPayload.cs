@@ -6,11 +6,11 @@ public class CreateUserAccountPayload
 {
     [ID]
     [GraphQLDescription("The ID of the created user")]
-    public string? UserId { get; set; }
+    public Guid? UserId { get; set; }
     public int Code { get; set; }
     public string[] Messages { get; set; }
     public bool Success { get; set; }
-    public CreateUserAccountPayload(int code, string[] messages, bool success, string? userId)
+    public CreateUserAccountPayload(int code, string[] messages, bool success, Guid? userId)
     {
         Code = code;
         Messages = messages;

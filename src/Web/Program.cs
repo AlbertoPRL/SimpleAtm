@@ -1,4 +1,6 @@
+using Microsoft.IdentityModel.Logging;
 using SimpleAtm.Infrastructure.Data;
+using SimpleAtm.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     await app.InitialiseDatabaseAsync();
+    IdentityModelEventSource.ShowPII = true;
 }
 else
 {
@@ -24,7 +27,7 @@ else
 
 app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+//app.UseStaticFiles();
 
 //app.UseSwaggerUi(settings =>
 //{
@@ -42,13 +45,14 @@ app.UseStaticFiles();
 
 app.UseExceptionHandler(options => { });
 
-app.Map("/", () => Results.Redirect("/graphql"));
 
-
+app.UseRouting();
 //app.MapEndpoints();
 app.UseAuthentication();
-app.MapGraphQL();
 app.UseAuthorization();
+app.Map("/", () => Results.Redirect("/graphql"));
+app.MapGraphQL();
+
 
 app.Run();
 

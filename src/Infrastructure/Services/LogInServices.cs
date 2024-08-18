@@ -7,18 +7,25 @@ using System.Text;
 
 namespace SimpleAtm.Infrastructure.Services;
 
-public class LogInServices(IConfiguration _configuration)
+public class LogInServices
 {
-    public string GenerateJwtToken(string userName, string userId)
+    private readonly IConfiguration _configuration = null!;
+    public LogInServices(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+    public string GenerateJwtToken(string userName, Guid userId)
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
+        var audience = jwtSettings["Audience"];
+        var issuer = jwtSettings["Issuer"];
         var secretKey = jwtSettings["SecretKey"];
         if (string.IsNullOrEmpty(secretKey))
         {
             throw new TokenConfigurationException("Secret key is missing.");
         }
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(secretKey);
+        var key = Encoding.UTF8.GetBytes(secretKey);
 
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(key),
@@ -28,13 +35,15 @@ public class LogInServices(IConfiguration _configuration)
         {
             SigningCredentials = credentials,
             Expires = DateTime.UtcNow.AddHours(1),
-            Subject = GenerateClaims(userName, userId)
+            Subject = GenerateClaims(userName, userId),
+            Audience = audience,
+            Issuer = issuer
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
-    private static ClaimsIdentity GenerateClaims(string userName, string userId)
+    private static ClaimsIdentity GenerateClaims(string userName, Guid userId)
     {
         var ci = new ClaimsIdentity();
 

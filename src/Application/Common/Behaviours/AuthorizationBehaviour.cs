@@ -6,11 +6,11 @@ using SimpleAtm.Application.Common.Security;
 namespace SimpleAtm.Application.Common.Behaviours;
 public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
-    private readonly IUser _user;
+    private readonly ICurrentUser _user;
     private readonly IIdentityService _identityService;
 
     public AuthorizationBehaviour(
-        IUser user,
+        ICurrentUser user,
         IIdentityService identityService)
     {
         _user = user;
@@ -40,7 +40,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
                 {
                     foreach (var role in roles)
                     {
-                        var isInRole = await _identityService.IsInRoleAsync(_user.Id, role.Trim());
+                        var isInRole = await _identityService.IsInRoleAsync(_user.Id.Value, role.Trim());
                         if (isInRole)
                         {
                             authorized = true;
@@ -62,7 +62,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
             {
                 foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
                 {
-                    var authorized = await _identityService.AuthorizeAsync(_user.Id, policy);
+                    var authorized = await _identityService.AuthorizeAsync(_user.Id.Value, policy);
 
                     if (!authorized)
                     {

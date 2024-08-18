@@ -1,7 +1,7 @@
 ﻿using SimpleAtm.Application.Common.Interfaces;
 
 namespace SimpleAtm.Web.Services;
-public class CurrentUser : IUser
+public class CurrentUser : ICurrentUser
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -10,5 +10,15 @@ public class CurrentUser : IUser
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public string? Id => _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value ?? null;
+    public Guid Id 
+    {
+        get
+        {
+            var id  = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value ?? null;
+            return id != null ? Guid.Parse(id) : Guid.Empty;
+        }
+    }
+
+
+
 }

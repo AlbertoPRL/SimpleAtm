@@ -1,6 +1,5 @@
 ﻿namespace SimpleAtm.Application.Common.Interfaces;
-
-public interface IUser
+public interface ICurrentUser
 {
-    string? Id { get; }
+    public Guid Id { get; }
 }

@@ -4,6 +4,7 @@ using SimpleAtm.Infrastructure.Data;
 using SimpleAtm.Web.Schema.Mutation.BankAccount;
 using SimpleAtm.Web.Schema.Mutation.Deposit;
 using SimpleAtm.Web.Schema.Mutation.Login;
+using SimpleAtm.Web.Schema.Mutation.Transfer;
 using SimpleAtm.Web.Schema.Mutation.User;
 using SimpleAtm.Web.Schema.Mutation.Withdraw;
 
@@ -90,6 +91,7 @@ public class Mutation
         }
     }
 
+    [GraphQLDescription("Withdraw money from a bank account")]
     [Authorize]
     public async Task<WithdrawPayload> Withdraw(
         WithdrawInput input,
@@ -114,6 +116,36 @@ public class Mutation
         catch (Exception ex)
         {
             return new WithdrawPayload(string.Empty, 0, false, ex.Message);
+        }
+    }
+
+    [GraphQLDescription("Transfer money between bank accounts")]
+    [Authorize]
+    public async Task<TransferPayload> Transfer(
+        TransferInput input,
+        [Service] ICurrentUser currentUser,
+        [Service] ApplicationDbContext context)
+    {
+        try
+        {
+            var fromAccount = context.BankAccounts.FirstOrDefault(x => x.AccountNumber == input.SenderAccountNumber);
+            var toAccount = context.BankAccounts.FirstOrDefault(x => x.AccountNumber == input.RecipientAccountNumber);
+            if (fromAccount != null && toAccount != null)
+            {
+                if (fromAccount.Balance >= input.TransferAmount)
+                {
+                    fromAccount.Balance -= input.TransferAmount;
+                    toAccount.Balance += input.TransferAmount;
+                    await context.SaveChangesAsync();
+                    return new TransferPayload(fromAccount.AccountNumber, fromAccount.Balance, true, string.Empty);
+                }
+                return new TransferPayload(fromAccount.AccountNumber, fromAccount.Balance, false, "Insufficient funds");
+            }
+            return new TransferPayload(string.Empty, 0.00, false, "Account not found");
+        }
+        catch (Exception ex)
+        {
+            return new TransferPayload(string.Empty, 0.00, false, ex.Message);
         }
     }
 }

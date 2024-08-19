@@ -1,12 +1,11 @@
 ﻿using HotChocolate.Authorization;
-using SimpleAtm.Application.BankAccount;
 using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Infrastructure.Data;
-using SimpleAtm.Infrastructure.Data.Repositories;
 using SimpleAtm.Web.Schema.Mutation.BankAccount;
 using SimpleAtm.Web.Schema.Mutation.Deposit;
 using SimpleAtm.Web.Schema.Mutation.Login;
 using SimpleAtm.Web.Schema.Mutation.User;
+using SimpleAtm.Web.Schema.Mutation.Withdraw;
 
 namespace SimpleAtm.Web.Schema.Mutation;
 
@@ -18,11 +17,11 @@ public class Mutation
         [Service] IIdentityService identityService)
     {
         var response = await identityService.CreateUserAsync(input.UserName, input.Password);
-        if(response.Result.Succeeded)
+        if (response.Result.Succeeded)
         {
             return new CreateUserAccountPayload(200, response.Result.Errors, true, response.UserId);
         }
-        else 
+        else
         {
             return new CreateUserAccountPayload(400, response.Result.Errors, false, null);
         }
@@ -38,7 +37,7 @@ public class Mutation
         {
             return new LoginPayload(200, result.Errors, true, result.Token);
         }
-        return new LoginPayload(400, result.Errors, false, result.Token);      
+        return new LoginPayload(400, result.Errors, false, result.Token);
     }
 
     [GraphQLDescription("Create a bank account")]
@@ -46,7 +45,7 @@ public class Mutation
     public async Task<CreateBankAccountPayload> CreateBankAccount(
         CreateBankAccountInput input,
         [Service] IBankAccountRepository bankAccountRepository,
-        [Service]ICurrentUser user,
+        [Service] ICurrentUser user,
         [Service] IBankAccountManager bankAccountManager)
     {
         var userId = user.Id;
@@ -57,7 +56,7 @@ public class Mutation
             var result = await bankAccountRepository.CreateBankAccount(accountNumber, balance, userId);
             if (result.Succeeded)
             {
-                return new CreateBankAccountPayload(accountNumber, balance,200, result.Succeeded);
+                return new CreateBankAccountPayload(accountNumber, balance, 200, result.Succeeded);
             }
             else
             {
@@ -84,9 +83,37 @@ public class Mutation
                 return new DepositPayload(account.AccountNumber, account.Balance, true, string.Empty);
             }
             return new DepositPayload(string.Empty, 0, false, "Account not found");
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             return new DepositPayload(string.Empty, 0, false, ex.Message);
+        }
+    }
+
+    [Authorize]
+    public async Task<WithdrawPayload> Withdraw(
+        WithdrawInput input,
+        [Service] ICurrentUser currentUser,
+        [Service] ApplicationDbContext context)
+    {
+        try
+        {
+            var account = context.BankAccounts.FirstOrDefault(x => x.AccountNumber == input.AccountNumber);
+            if (account != null)
+            {
+                if (account.Balance >= input.Amount)
+                {
+                    account.Balance -= input.Amount;
+                    await context.SaveChangesAsync();
+                    return new WithdrawPayload(account.AccountNumber, account.Balance, true, string.Empty);
+                }
+                return new WithdrawPayload(account.AccountNumber, account.Balance, false, "Insufficient funds");
+            }
+            return new WithdrawPayload(string.Empty, 0, false, "Account not found");
+        }
+        catch (Exception ex)
+        {
+            return new WithdrawPayload(string.Empty, 0, false, ex.Message);
         }
     }
 }

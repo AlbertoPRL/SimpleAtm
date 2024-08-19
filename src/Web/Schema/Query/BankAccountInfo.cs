@@ -1,6 +1,4 @@
-﻿using SimpleAtm.Domain.Entities;
-
-namespace SimpleAtm.Web.Schema.Query;
+﻿namespace SimpleAtm.Web.Schema.Query;
 
 public class BankAccountInfo
 {

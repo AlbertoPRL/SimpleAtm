@@ -1,8 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using HotChocolate.Authorization;
-using Microsoft.IdentityModel.Tokens;
+﻿using HotChocolate.Authorization;
 using SimpleAtm.Infrastructure.Data;
 
 namespace SimpleAtm.Web.Schema.Query;

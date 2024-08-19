@@ -33,7 +33,7 @@ public class BankAccountRepository : IBankAccountRepository
         throw new NotImplementedException();
     }
 
-    public Task<Result> GetBankAccountById(int id)
+    public Task<Result> GetBankAccountByAccountNumber(Guid id)
     {
         throw new NotImplementedException();
     }

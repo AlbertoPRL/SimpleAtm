@@ -1,6 +1,8 @@
 ﻿using HotChocolate.Authorization;
 using SimpleAtm.Application.BankAccount;
 using SimpleAtm.Application.Common.Interfaces;
+using SimpleAtm.Infrastructure.Data;
+using SimpleAtm.Infrastructure.Data.Repositories;
 using SimpleAtm.Web.Schema.Mutation.BankAccount;
 using SimpleAtm.Web.Schema.Mutation.Deposit;
 using SimpleAtm.Web.Schema.Mutation.Login;
@@ -65,13 +67,26 @@ public class Mutation
         return new CreateBankAccountPayload(string.Empty, 0, 400, false);
     }
 
-    //[GraphQLDescription("Deposit money into a bank account")]
-    //[Authorize]
-    //public async Task<DepositPayload> Deposit(
-    //    DepositInput input,
-    //    [Service] BankAccountManager bankAccountManager,
-    //    [Service] ICurrentUser currentUser)
-    //{
-           
-    //}
+    [GraphQLDescription("Deposit money into a bank account")]
+    [Authorize]
+    public async Task<DepositPayload> Deposit(
+        DepositInput input,
+        [Service] ICurrentUser currentUser,
+        [Service] ApplicationDbContext context)
+    {
+        try
+        {
+            var account = context.BankAccounts.FirstOrDefault(x => x.AccountNumber == input.AccountNumber);
+            if (account != null)
+            {
+                account.Balance += input.Amount;
+                await context.SaveChangesAsync();
+                return new DepositPayload(account.AccountNumber, account.Balance, true, string.Empty);
+            }
+            return new DepositPayload(string.Empty, 0, false, "Account not found");
+        }catch(Exception ex)
+        {
+            return new DepositPayload(string.Empty, 0, false, ex.Message);
+        }
+    }
 }

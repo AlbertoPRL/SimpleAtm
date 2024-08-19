@@ -5,6 +5,6 @@ namespace SimpleAtm.Application.Common.Interfaces;
 public interface IBankAccountRepository
 {
     Task<Result> CreateBankAccount(string accountNumber, double balance, Guid userId);
-    Task<Result> GetBankAccountById(int id);
+    Task<Result> GetBankAccountByAccountNumber(Guid id);
     Task<List<Result>> GetAllBankAccounts();
 }

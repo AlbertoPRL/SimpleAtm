@@ -2,7 +2,10 @@
 
 public class DepositInput
 {
+    [GraphQLDescription("Account to deposit money")]
     public string AccountNumber { get; set; }
+
+    [GraphQLDescription("Ammount to deposit")]
     public double Amount { get; set; }
 
     public DepositInput(string accountNumber, double amount)

@@ -5,20 +5,20 @@ public class DepositPayload
     [GraphQLDescription("The account number of the account that was deposited into")]
     public string AccountNumber { get; set; }
 
-    [GraphQLDescription("The amount deposited")]
-    public double Amount { get; set; }
+    [GraphQLDescription("The amount after the deposit")]
+    public double AccountBalance { get; set; }
 
     [GraphQLDescription("Errors")]
-    public string[] Messages { get; set; }
+    public string? Messages { get; set; }
 
     [GraphQLDescription("Success status")]
     public bool Success { get; set; }
 
-    public DepositPayload(string accountNumber, double amount, string[] messages, bool success)
+    public DepositPayload(string accountNumber, double accountBalance, bool success, string? message)
     {
         AccountNumber = accountNumber;
-        Amount = amount;
-        Messages = messages;
+        AccountBalance = accountBalance;
         Success = success;
+        Messages = message;
     }
 }

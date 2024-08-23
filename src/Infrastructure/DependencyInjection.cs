@@ -23,10 +23,6 @@ public static class DependencyInjection
         var issuer = jwtSettings["Issuer"];
         var audience = jwtSettings["Audience"];
 
-        Console.WriteLine(secretKey);
-        Console.WriteLine(issuer);
-        Console.WriteLine(audience);
-
         Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
         Guard.Against.Null(secretKey, message: "Secret key is missing.");
         Guard.Against.Null(issuer, message: "Issuer is missing.");
@@ -39,7 +35,7 @@ public static class DependencyInjection
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         services.AddScoped<IBankAccountRepository, BankAccountRepository>();
- 
+
 
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
@@ -85,7 +81,7 @@ public static class DependencyInjection
         services.AddTransient<LogInServices>();
 
         services.AddAuthorization();
-            //options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
+        //options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
 
         return services;
     }

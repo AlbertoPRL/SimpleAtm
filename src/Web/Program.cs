@@ -1,15 +1,14 @@
-using Microsoft.IdentityModel.Logging;
 using SimpleAtm.Infrastructure.Data;
-using SimpleAtm.Web;
+using Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
-
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
+builder.Services.AddBlazorServices();
 
 var app = builder.Build();
 
@@ -17,7 +16,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     await app.InitialiseDatabaseAsync();
-    IdentityModelEventSource.ShowPII = true;
+    app.UseWebAssemblyDebugging();
+    app.UseDeveloperExceptionPage();
 }
 else
 {
@@ -25,34 +25,26 @@ else
     app.UseHsts();
 }
 
-app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
-//app.UseStaticFiles();
 
-//app.UseSwaggerUi(settings =>
-//{
-//    settings.Path = "/api";
-//    settings.DocumentPath = "/api/specification.json";
-//});
+app.UseHealthChecks("/health");
 
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller}/{action=Index}/{id?}");
+//app.UseExceptionHandler(options => { });
 
-//app.MapRazorPages();
-
-//app.MapFallbackToFile("index.html");
-
-app.UseExceptionHandler(options => { });
-
+app.UseStaticFiles();
 
 app.UseRouting();
-//app.MapEndpoints();
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.Map("/", () => Results.Redirect("/graphql"));
-app.MapGraphQL();
 
+app.UseAntiforgery();
+
+app.MapGraphQL();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode()
+    .AddInteractiveWebAssemblyRenderMode()
+    .AddAdditionalAssemblies(typeof(BlazorClient._Imports).Assembly);
 
 app.Run();
 

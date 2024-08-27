@@ -1,0 +1,6 @@
+﻿query GetBankAccounts{
+    bankAccounts{
+        accountNumber
+        balance
+    }
+}

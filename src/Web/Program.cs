@@ -1,5 +1,5 @@
 using SimpleAtm.Infrastructure.Data;
-using Web.Components;
+using Web.Components.Pages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +8,6 @@ builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
-builder.Services.AddBlazorServices();
 
 var app = builder.Build();
 

@@ -13,7 +13,7 @@ public class Query
         _configuration = configuration;
     }
 
-    [Authorize]
+    //[Authorize]
     [UseProjection]
     public IQueryable<BankAccountInfo> GetBankAccounts(
         [Service] ApplicationDbContext applicationDbContext)

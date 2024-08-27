@@ -8,10 +8,15 @@
     <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
     <UserSecretsId>6e21f279-bb5c-4fb4-a3e6-3637146a4a6f</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <GraphQL Remove="GetBankAccounts.graphql" />
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
     <PackageReference Include="MudBlazor" />
+    <PackageReference Include="StrawberryShake.Blazor" />
   </ItemGroup>
 
 </Project>

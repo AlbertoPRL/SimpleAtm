@@ -1,0 +1,137 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+"Defines when a policy shall be executed."
+enum ApplyPolicy {
+  "Before the resolver was executed."
+  BEFORE_RESOLVER
+  "After the resolver was executed."
+  AFTER_RESOLVER
+  "The policy is applied in the validation step before the execution."
+  VALIDATION
+}
+
+type Query {
+  bankAccounts: [BankAccountInfo!]!
+  accountByAccountNumber(accountNumber: String!): BankAccountInfo!
+}
+
+type Mutation {
+  "Create a user account"
+  createAccount(input: CreateUserAccountInput!): CreateUserAccountPayload!
+  "Login to the application"
+  login(input: LoginInput!): LoginPayload!
+  "Create a bank account"
+  createBankAccount(input: CreateBankAccountInput!): CreateBankAccountPayload!
+  "Deposit money into a bank account"
+  deposit(input: DepositInput!): DepositPayload!
+  "Withdraw money from a bank account"
+  withdraw(input: WithdrawInput!): WithdrawPayload!
+  "Transfer money between bank accounts"
+  transfer(input: TransferInput!): TransferPayload!
+}
+
+input CreateUserAccountInput {
+  userName: String!
+  password: String!
+}
+
+type CreateUserAccountPayload {
+  "The ID of the created user"
+  userId: ID
+  code: Int!
+  messages: [String!]!
+  success: Boolean!
+}
+
+type BankAccountInfo {
+  "Bank Account Number"
+  accountNumber: ID!
+  "Current Bank Account Balance"
+  balance: Float!
+}
+
+type LoginPayload {
+  statusCode: Int!
+  errors: [String!]!
+  succeeded: Boolean!
+  authenticationToken: String
+}
+
+input LoginInput {
+  userName: String!
+  password: String!
+}
+
+type CreateBankAccountPayload {
+  accountNumber: String!
+  balance: Float!
+  code: Int!
+  messages: [String!]
+  success: Boolean!
+}
+
+input CreateBankAccountInput {
+  creationConfirmed: Boolean!
+}
+
+type DepositPayload {
+  "The account number of the account that was deposited into"
+  accountNumber: String!
+  "The amount after the deposit"
+  accountBalance: Float!
+  "Errors"
+  messages: String
+  "Success status"
+  success: Boolean!
+}
+
+input DepositInput {
+  "Account to deposit money"
+  accountNumber: String!
+  "Ammount to deposit"
+  amount: Float!
+}
+
+type WithdrawPayload {
+  "Bank Account Number"
+  accountNumber: String!
+  "Current Bank Account Balance"
+  balance: Float!
+  "Success"
+  succeeded: Boolean!
+  "Error"
+  error: String
+}
+
+input WithdrawInput {
+  "Bank Account Number"
+  accountNumber: ID!
+  "Amount to withdraw"
+  amount: Float!
+}
+
+type TransferPayload {
+  "Bank Account Number"
+  accountNumber: String!
+  "Current Bank Account Balance"
+  balance: Float!
+  "Success"
+  succeeded: Boolean!
+  "Error"
+  error: String
+}
+
+input TransferInput {
+  "Bank Account Number"
+  senderAccountNumber: ID!
+  "Amount to transfer"
+  transferAmount: Float!
+  "Recipient Bank Account Number"
+  recipientAccountNumber: ID!
+}
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION

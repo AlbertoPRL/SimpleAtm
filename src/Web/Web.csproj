@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <Folder Include="Schema\Subscription\" />
-    <Folder Include="wwwroot\"/>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 

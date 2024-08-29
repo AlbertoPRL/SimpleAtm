@@ -13,6 +13,7 @@ public static class DependencyInjection
     {
         services.AddBankApiGraphql()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7181/graphql"));
+
         services.AddMudServices();
         services.AddGraphQLServer()
                 .AddAuthorization()

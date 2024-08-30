@@ -1,8 +1,6 @@
 ﻿@page "/SignUp"
 @rendermode InteractiveAuto
-@inject BankApiGraphql.Client.BankApiGraphql _client
-
-
+@inject BankApiGraphqlClient _client
 
 <h3>Lets SignUp</h3>
 
@@ -14,7 +12,7 @@
 @code {
 	async Task CreateAccount()
 	{
-		var signUpResult = await _client.CreateUserAccount.ExecuteAsync(new BankApiGraphql.Client.CreateUserAccountInput
+		var signUpResult = await _client.CreateUserAccount.ExecuteAsync(new CreateUserAccountInput
 		{
 			Password = "Test234@",
 			UserName = "test234@test.com"

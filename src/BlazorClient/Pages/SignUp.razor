@@ -1,9 +1,27 @@
 ﻿@page "/SignUp"
+@rendermode InteractiveAuto
+@inject BankApiGraphql.Client.BankApiGraphql _client
+
+
 
 <h3>Lets SignUp</h3>
 
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateAccount">Create Account</MudButton>
 
+<MudContainer>
+</MudContainer>
 
 @code {
-
+	async Task CreateAccount()
+	{
+		var signUpResult = await _client.CreateUserAccount.ExecuteAsync(new BankApiGraphql.Client.CreateUserAccountInput
+		{
+			Password = "Test234@",
+			UserName = "test234@test.com"
+		});
+		signUpResult.EnsureNoErrors();
+		var createAccountResult = signUpResult.Data?.CreateAccount;
+		Console.WriteLine(createAccountResult);
+		await Task.Delay(1000);
+	}
 }

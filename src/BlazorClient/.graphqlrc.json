@@ -4,7 +4,7 @@
   "extensions": {
     "strawberryShake": {
       "name": "BankApiGraphql",
-      "namespace": "BankApiGraphql",
+      "namespace": "BankApiGraphql.Client",
       "url": "https://localhost:7181/graphql",
       "records": {
         "inputs": false,

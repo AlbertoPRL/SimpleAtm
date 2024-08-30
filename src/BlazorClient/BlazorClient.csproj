@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <GraphQL Remove="CreateBankAccountMutation.graphql" />
     <GraphQL Remove="GetBankAccounts.graphql" />
   </ItemGroup>
   

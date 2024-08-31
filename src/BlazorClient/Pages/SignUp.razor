@@ -7,18 +7,5 @@
 <SignUpForm></SignUpForm>
 
 
-@code {
-	public ICreateUserAccount_CreateAccount? signUpResult { get; set; }
-
-	async Task CreateAccount()
-	{
-		var result = await _client.CreateUserAccount.ExecuteAsync(new CreateUserAccountInput
-		{
-			Password = "Test234@",
-			UserName = "test234@test.com"
-		});
-		result.EnsureNoErrors();
-		signUpResult = result?.Data?.CreateAccount;
-		await Task.Delay(1000);
-	}
+@code {	
 }

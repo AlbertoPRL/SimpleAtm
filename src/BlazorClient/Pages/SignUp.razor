@@ -4,22 +4,21 @@
 
 <h3>Lets SignUp</h3>
 
-<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateAccount">Create Account</MudButton>
+<SignUpForm></SignUpForm>
 
-<MudContainer>
-</MudContainer>
 
 @code {
+	public ICreateUserAccount_CreateAccount? signUpResult { get; set; }
+
 	async Task CreateAccount()
 	{
-		var signUpResult = await _client.CreateUserAccount.ExecuteAsync(new CreateUserAccountInput
+		var result = await _client.CreateUserAccount.ExecuteAsync(new CreateUserAccountInput
 		{
 			Password = "Test234@",
 			UserName = "test234@test.com"
 		});
-		signUpResult.EnsureNoErrors();
-		var createAccountResult = signUpResult.Data?.CreateAccount;
-		Console.WriteLine(createAccountResult);
+		result.EnsureNoErrors();
+		signUpResult = result?.Data?.CreateAccount;
 		await Task.Delay(1000);
 	}
 }

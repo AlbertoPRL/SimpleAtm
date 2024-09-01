@@ -59,7 +59,7 @@
 			if(logInResult?.AuthenticationToken != null)
 			{
 				await _sessionStorageService.SetItemAsStringAsync("authToken", logInResult.AuthenticationToken);
-				_navigationManager.NavigateTo("/counter");
+				_navigationManager.NavigateTo("/home");
 			}
 		}
 	}

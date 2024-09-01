@@ -1,0 +1,43 @@
+﻿@rendermode InteractiveAuto
+
+<UseGetBankAccounts Context="result">
+	<ChildContent>
+		@if(result != null)
+		{
+			<MudContainer Class="d-flex justify-space-between">
+				<MudText Typo="Typo.h6">BankAccounts (@result.BankAccounts.Count)</MudText>
+				<MudText Typo="Typo.h6">$@result.BankAccounts.Sum(x => x.Balance)</MudText>
+			</MudContainer>
+			@foreach (var account in result.BankAccounts)
+			{
+				<MudCard Outlined="true">
+					<MudCardHeader>
+						<MudText Typo="Typo.h6">Checking Account (...@account.AccountNumber[^4..])</MudText>
+					</MudCardHeader>
+					<MudCardContent Class="d-flex justify-space-between">
+						<MudContainer></MudContainer>
+						<MudContainer>
+							<MudText Typo="Typo.h5">$@account.Balance</MudText>
+							<MudText Typo="Typo.h6">Available Balance</MudText> 
+						</MudContainer>
+					</MudCardContent>
+
+				</MudCard>
+			}
+		}
+	</ChildContent>
+</UseGetBankAccounts>
+
+
+@code {
+// 	@if (result != null)
+// 	{
+// 	@foreach (var account in result.BankAccounts)
+// 		{
+// 	<h1>@account.AccountNumber</h1>
+// 	<h1>@account.Balance</h1>
+// 	<br />
+// 	<br />
+// 		}
+// }
+}

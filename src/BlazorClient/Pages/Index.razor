@@ -1,0 +1,20 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<MudContainer Fixed=true Class="d-flex flex-column align-content-center flex-grow-1 gap-4">
+	<MudText Class="text-center">Welcome to Simple Bank Project</MudText>
+	<MudText Class="text-center">Please provide your LogIn credentials</MudText>
+	<MudContainer Fixed=true MaxWidth="MaxWidth.Small" Class="pa-4">
+		<LogInForm></LogInForm>
+	</MudContainer>
+	<MudContainer Fixed="true" Class="d-flex flex-row align-content-center">
+		<MudText>Don't have an account yet?</MudText>
+		<NavLink href="/SignUp">SignUp</NavLink>
+	</MudContainer>
+</MudContainer>
+
+
+
+@code {
+}

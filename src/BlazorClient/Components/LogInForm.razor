@@ -1,6 +1,7 @@
 ﻿@rendermode InteractiveAuto
 @inject BankApiGraphqlClient _client
 @inject NavigationManager _navigationManager
+@inject ISessionStorageService _sessionStorageService
 
 <MudForm Spacing="5" @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
 	<MudTextField T="string" Label="Email" HelperText="Type your Email"
@@ -15,10 +16,6 @@
 	<MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex justify-end mt-2">
 		<MudButton Variant="Variant.Filled" OnClick="LogIn" Color="Color.Primary" Disabled="@(!success)">LogIn</MudButton>
 	</MudContainer>	
-	@if(logInResult != null)
-	{
-		<MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@logInResult.AuthenticationToken</MudAlert>
-	})
 </MudForm>
 
 
@@ -61,7 +58,8 @@
 			logInResult = result?.Data?.Login;
 			if(logInResult?.AuthenticationToken != null)
 			{
-				
+				await _sessionStorageService.SetItemAsStringAsync("authToken", logInResult.AuthenticationToken);
+				_navigationManager.NavigateTo("/counter");
 			}
 		}
 	}

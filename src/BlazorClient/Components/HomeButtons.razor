@@ -1,0 +1,24 @@
+﻿@inject NavigationManager _navigationManager
+
+<MudContainer Class="d-flex flex-row justify-space-around">
+	<MudButton Variant="Variant.Filled"
+		StartIcon="@Icons.Material.Filled.Add">
+		Create New Account
+	</MudButton>
+	<MudButton Variant="Variant.Filled"
+		StartIcon="@Icons.Material.Filled.CompareArrows">
+		Transfer
+	</MudButton>
+</MudContainer>
+
+@code {
+	void CreateNewAccount()
+	{
+		_navigationManager.NavigateTo("/createAccount");
+	}
+
+	void Deposit()
+	{
+		_navigationManager.NavigateTo("/transfer");
+	}
+}

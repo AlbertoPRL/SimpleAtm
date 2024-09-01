@@ -1,5 +1,4 @@
 ﻿using Azure.Identity;
-using MudBlazor.Services;
 using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Infrastructure.Data;
 using SimpleAtm.Web.Schema.Mutation;
@@ -11,9 +10,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddWebServices(this IServiceCollection services)
     {
-        services.AddBankApiGraphql()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7181/graphql"));
-        services.AddMudServices();
+        //services.AddBankApiGraphqlClient()
+        //    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7181/graphql"));
+
+        //services.AddMudServices();
         services.AddGraphQLServer()
                 .AddAuthorization()
                 .AddQueryType<Query>()

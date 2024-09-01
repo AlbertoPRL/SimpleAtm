@@ -1,0 +1,7 @@
+﻿mutation LogIn($input: LoginInput!) {
+  login(input: $input) {
+    succeeded
+    authenticationToken
+    errors
+  }
+}

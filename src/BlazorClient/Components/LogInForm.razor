@@ -1,0 +1,66 @@
+﻿@rendermode InteractiveAuto
+@inject BankApiGraphqlClient _client
+@inject NavigationManager _navigationManager
+@inject ISessionStorageService _sessionStorageService
+
+<MudForm Spacing="5" @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
+	<MudTextField T="string" Label="Email" HelperText="Type your Email"
+		@ref="emailField"
+		Required="true" RequiredError="Email is required"
+		Validation="@(new EmailAddressAttribute() {ErrorMessage="Invalid Email Address"})"/>
+	<MudTextField T="string" Label="Password" HelperText="Choose a strong password" 
+		InputType="InputType.Password"
+		@ref="pwField1"
+		Required="true" RequiredError="Password is required"
+		Validation="@(new Func<string, IEnumerable<string>>(ValidatePassword))"/>
+	<MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex justify-end mt-2">
+		<MudButton Variant="Variant.Filled" OnClick="LogIn" Color="Color.Primary" Disabled="@(!success)">LogIn</MudButton>
+	</MudContainer>	
+</MudForm>
+
+
+@code {
+	MudForm form = null!;
+	MudTextField<string> pwField1 = null!;
+	MudTextField<string> emailField = new();
+	ILogIn_Login? logInResult { get; set; }
+
+	bool success;
+	string[] errors = { };
+
+	private IEnumerable<string> ValidatePassword(string pw)
+	{
+		if (string.IsNullOrWhiteSpace(pw))
+		{
+			yield return "Password is required!";
+			yield break;
+		}
+		if (pw.Length < 8)
+			yield return "Password must be at least of length 8";
+		if (!Regex.IsMatch(pw, @"[A-Z]"))
+			yield return "Password must contain at least one capital letter";
+		if (!Regex.IsMatch(pw, @"[a-z]"))
+			yield return "Password must contain at least one lowercase letter";
+		if (!Regex.IsMatch(pw, @"[0-9]"))
+			yield return "Password must contain at least one digit";
+	}
+
+	private async Task LogIn()
+	{
+		if(pwField1.Value != null && emailField.Value != null)
+		{
+			var result = await _client.LogIn.ExecuteAsync(new LoginInput
+			{
+				Password = pwField1.Value,
+				UserName = emailField.Value
+			});
+			result.EnsureNoErrors();
+			logInResult = result?.Data?.Login;
+			if(logInResult?.AuthenticationToken != null)
+			{
+				await _sessionStorageService.SetItemAsStringAsync("authToken", logInResult.AuthenticationToken);
+				_navigationManager.NavigateTo("/home");
+			}
+		}
+	}
+}

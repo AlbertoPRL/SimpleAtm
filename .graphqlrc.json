@@ -2,26 +2,26 @@
   "projects": [
     {
       "schema": [
-        "src/BlazorClient/BankApiClient/schema.graphql"
+        "src/BlazorClient/schema.graphql"
       ],
       "documents": [
-        "src/BlazorClient/BankApiClient/**/*.graphql"
+        "src/BlazorClient/**/*.graphql"
       ]
     },
     {
       "schema": [
-        "src/BlazorClient/bin/Debug/net8.0/BankApiClient/schema.graphql"
+        "src/BlazorClient/bin/Debug/net8.0/schema.graphql"
       ],
       "documents": [
-        "src/BlazorClient/bin/Debug/net8.0/BankApiClient/**/*.graphql"
+        "src/BlazorClient/bin/Debug/net8.0/**/*.graphql"
       ]
     },
     {
       "schema": [
-        "src/Web/bin/Debug/net8.0/BankApiClient/schema.graphql"
+        "src/Web/bin/Debug/net8.0/schema.graphql"
       ],
       "documents": [
-        "src/Web/bin/Debug/net8.0/BankApiClient/**/*.graphql"
+        "src/Web/bin/Debug/net8.0/**/*.graphql"
       ]
     }
   ]

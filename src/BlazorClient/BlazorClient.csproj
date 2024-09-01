@@ -13,6 +13,10 @@
     <GraphQL Remove="CreateBankAccountMutation.graphql" />
     <GraphQL Remove="GetBankAccounts.graphql" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="LogInMutation.graphql" />
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />

@@ -2,6 +2,7 @@
 @inject BankApiGraphqlClient _client
 @inject NavigationManager _navigationManager
 @inject ISessionStorageService _sessionStorageService
+@inject TokenService _tokenService
 
 <MudForm Spacing="5" @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
 	<MudTextField T="string" Label="Email" HelperText="Type your Email"
@@ -59,6 +60,7 @@
 			if(logInResult?.AuthenticationToken != null)
 			{
 				await _sessionStorageService.SetItemAsStringAsync("authToken", logInResult.AuthenticationToken);
+				await _tokenService.LoadTokenAsync();
 				_navigationManager.NavigateTo("/home");
 			}
 		}

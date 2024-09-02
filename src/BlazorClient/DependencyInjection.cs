@@ -1,4 +1,5 @@
-﻿using Blazored.SessionStorage;
+﻿using BlazorClient.Services;
+using Blazored.SessionStorage;
 using MudBlazor.Services;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -10,8 +11,17 @@ public static class DependencyInjection
 
         services.AddMudServices();
         services.AddBankApiGraphqlClient()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://localhost:7181/graphql"));
+            .ConfigureHttpClient((serviceProvider, client) =>
+            {
+                client.BaseAddress =
+                     new Uri("https://localhost:7181/graphql/");
+                TokenService tokenService = serviceProvider.GetRequiredService<TokenService>();
+                client.DefaultRequestHeaders.Add("Bearer", tokenService.token);
+            });
+
         services.AddBlazoredSessionStorage();
+
+        services.AddScoped<TokenService>();
 
         return services;
     }

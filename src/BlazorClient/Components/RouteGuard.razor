@@ -1,0 +1,43 @@
+﻿@inject TokenService _tokenService
+@inject NavigationManager _navigationManager
+
+@if (isChecking)
+{
+	<p>Loading...</p> @* Show a loading state while checking the token *@
+}
+else
+{
+	@ChildContent @* Render the protected content if authorized *@
+}
+
+
+@code {
+	private bool isAuthorized = false;
+	private bool isChecking = true;
+
+	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			// Check for token after the first render
+			var token = await _tokenService.GetToken();
+
+			// Set authorization based on the token presence
+			isAuthorized = !string.IsNullOrEmpty(token);
+
+			if (!isAuthorized)
+			{
+				// Redirect if no token is present
+				_navigationManager.NavigateTo("/");
+			}
+			else
+			{
+				// Done checking, allow content to render
+				isChecking = false;
+				StateHasChanged();  // Trigger rerender
+			}
+		}
+	}
+}

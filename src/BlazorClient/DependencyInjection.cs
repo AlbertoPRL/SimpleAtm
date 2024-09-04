@@ -15,8 +15,17 @@ public static class DependencyInjection
             {
                 client.BaseAddress =
                      new Uri("https://localhost:7181/graphql/");
-                TokenService tokenService = serviceProvider.GetRequiredService<TokenService>();
-                client.DefaultRequestHeaders.Add("Bearer", tokenService.token);
+                try
+                {
+                    TokenService tokenService = serviceProvider.GetRequiredService<TokenService>();
+                    var token = tokenService.GetToken().GetAwaiter().GetResult();
+                    if (!string.IsNullOrEmpty(token))
+                        client.DefaultRequestHeaders.Add("Bearer", token);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             });
 
         services.AddBlazoredSessionStorage();

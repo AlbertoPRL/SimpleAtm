@@ -5,25 +5,19 @@ namespace BlazorClient.Services;
 public class TokenService
 {
     private readonly ISessionStorageService _sessionStorageService;
-    public string token = string.Empty;
 
     public TokenService(ISessionStorageService sessionStorageService)
     {
         _sessionStorageService = sessionStorageService;
     }
 
-    public async Task LoadTokenAsync()
+    public async Task SaveTokenAsync(string token)
     {
-        token = await _sessionStorageService.GetItemAsync<string>("authToken");
+        await _sessionStorageService.SetItemAsync("authToken", token);
     }
 
-    public string GetToken()
+    public ValueTask<string> GetToken()
     {
-        return token;
-    }
-
-    public void ClearToken()
-    {
-        token = string.Empty;
+        return _sessionStorageService.GetItemAsync<string>("authToken");
     }
 }

@@ -24,5 +24,9 @@
     <PackageReference Include="MudBlazor" />
     <PackageReference Include="StrawberryShake.Blazor" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
 
 </Project>

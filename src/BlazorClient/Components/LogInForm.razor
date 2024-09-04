@@ -1,7 +1,6 @@
 ﻿@rendermode InteractiveAuto
 @inject BankApiGraphqlClient _client
 @inject NavigationManager _navigationManager
-@inject ISessionStorageService _sessionStorageService
 @inject TokenService _tokenService
 
 <MudForm Spacing="5" @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
@@ -59,8 +58,7 @@
 			logInResult = result?.Data?.Login;
 			if(logInResult?.AuthenticationToken != null)
 			{
-				await _sessionStorageService.SetItemAsStringAsync("authToken", logInResult.AuthenticationToken);
-				await _tokenService.LoadTokenAsync();
+				await _tokenService.SaveTokenAsync(logInResult.AuthenticationToken);
 				_navigationManager.NavigateTo("/home");
 			}
 		}

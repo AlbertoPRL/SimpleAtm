@@ -1,0 +1,26 @@
+﻿<MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex flex-column gap-4">
+	<MudForm @bind-IsValid="@success">
+		<MudTextField T="string" Label="Account Name" Placeholder="Select a name/alias for your account"
+			Required="false" @ref="@accountName">
+		</MudTextField>
+		<MudSelect T="string" Label="Account Type" Variant="Variant.Text" 
+				Placeholder="Select the account type"
+				@ref="accountType"
+				Required="true" RequiredError="Please select an account type"
+>
+			<MudSelectItem Value="@("Checking")"/>
+			<MudSelectItem Value="@("Savings")" />
+			<MudSelectItem Value="@("Credit")" />
+		</MudSelect>
+	</MudForm>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)">
+		Create Account
+	</MudButton>
+</MudContainer>
+
+@code {
+	MudSelect<string> accountType = null!;
+	MudTextField<string> accountName = null!;
+
+	bool success;
+}

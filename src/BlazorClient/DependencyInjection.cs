@@ -8,29 +8,20 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddBlazorServices(this IServiceCollection services)
     {
+        services.AddSingleton<TokenStore>();
 
+        services.AddBlazoredSessionStorage();
         services.AddMudServices();
         services.AddBankApiGraphqlClient()
             .ConfigureHttpClient((serviceProvider, client) =>
             {
+                var token = serviceProvider.GetRequiredService<TokenStore>().Token;
+
                 client.BaseAddress =
                      new Uri("https://localhost:7181/graphql/");
-                try
-                {
-                    TokenService tokenService = serviceProvider.GetRequiredService<TokenService>();
-                    var token = tokenService.GetToken().GetAwaiter().GetResult();
-                    if (!string.IsNullOrEmpty(token))
-                        client.DefaultRequestHeaders.Add("Bearer", token);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token ?? string.Empty}");
             });
 
-        services.AddBlazoredSessionStorage();
-
-        services.AddScoped<TokenService>();
 
         return services;
     }

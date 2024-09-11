@@ -7,7 +7,6 @@
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
     <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
     <UserSecretsId>6e21f279-bb5c-4fb4-a3e6-3637146a4a6f</UserSecretsId>
-    <WarningsAsErrors>MUD0001,MUD0002</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="CreateUserAccountMutation.graphql" />
     <None Remove="LogInMutation.graphql" />
   </ItemGroup>
   

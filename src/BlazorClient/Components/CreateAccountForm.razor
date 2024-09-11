@@ -1,5 +1,8 @@
-﻿<MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex flex-column gap-4">
-	<MudForm @bind-IsValid="@success">
+﻿@inject BankApiGraphqlClient _bankApiGraphqlClient
+@inject NavigationManager _navigationManager
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex flex-column gap-4">
+	<MudForm @bind-IsValid="@success" Class="gap-4">
 		<MudTextField T="string" Label="Account Name" Placeholder="Select a name/alias for your account"
 			Required="false" @ref="@accountName">
 		</MudTextField>
@@ -11,9 +14,11 @@
 			<MudSelectItem Value="@("Checking")"/>
 			<MudSelectItem Value="@("Savings")" />
 			<MudSelectItem Value="@("Credit")" />
+			<MudSelectItem Value="@("Investment")" />
 		</MudSelect>
+		<MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" />
 	</MudForm>
-	<MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)">
+	<MudButton OnClick="CreateBankAccount" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)">
 		Create Account
 	</MudButton>
 </MudContainer>
@@ -21,6 +26,30 @@
 @code {
 	MudSelect<string> accountType = null!;
 	MudTextField<string> accountName = null!;
+	ICreateBankAccount_CreateBankAccount? AccountCreationResult;
 
 	bool success;
+
+	async Task CreateBankAccount()
+	{
+		var result = await _bankApiGraphqlClient.CreateBankAccount.ExecuteAsync(new CreateBankAccountInput
+		{
+			CreationConfirmed = true,
+		});
+
+		result.EnsureNoErrors();
+
+		if(result != null && result.Data != null)
+		{
+			AccountCreationResult = result.Data.CreateBankAccount;
+			if(AccountCreationResult != null)
+			{
+				_navigationManager.NavigateTo("/home");
+			}
+			else
+			{
+				throw new Exception("Account creation failed");
+			};
+		}
+	}
 }

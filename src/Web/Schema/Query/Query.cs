@@ -1,4 +1,5 @@
 ﻿using HotChocolate.Authorization;
+using SimpleAtm.Application.Common.Interfaces;
 using SimpleAtm.Infrastructure.Data;
 
 namespace SimpleAtm.Web.Schema.Query;
@@ -16,10 +17,11 @@ public class Query
     //[Authorize]
     [UseProjection]
     public IQueryable<BankAccountInfo> GetBankAccounts(
-        [Service] ApplicationDbContext applicationDbContext)
+        [Service] ApplicationDbContext applicationDbContext,
+        [Service] ICurrentUser currentUser)
     {
         var bankAccounts = applicationDbContext.BankAccounts;
-        var bankAccountInfos = bankAccounts.Select(ba => new BankAccountInfo
+        var bankAccountInfos = bankAccounts.Where(x => x.ApplicationUserId == currentUser.Id).Select(ba => new BankAccountInfo
         {
             AccountNumber = ba.AccountNumber,
             Balance = ba.Balance

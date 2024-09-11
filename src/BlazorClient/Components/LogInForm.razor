@@ -1,7 +1,7 @@
 ﻿@rendermode InteractiveAuto
 @inject BankApiGraphqlClient _client
 @inject NavigationManager _navigationManager
-@inject TokenService _tokenService
+@inject TokenStore _tokenStore
 
 <MudForm Spacing="5" @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" >
 	<MudTextField T="string" Label="Email" HelperText="Type your Email"
@@ -58,7 +58,7 @@
 			logInResult = result?.Data?.Login;
 			if(logInResult?.AuthenticationToken != null)
 			{
-				await _tokenService.SaveTokenAsync(logInResult.AuthenticationToken);
+				_tokenStore.Token = logInResult.AuthenticationToken ?? string.Empty;
 				_navigationManager.NavigateTo("/home");
 			}
 		}

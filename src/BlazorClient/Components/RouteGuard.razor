@@ -1,4 +1,4 @@
-﻿@inject TokenService _tokenService
+﻿@inject TokenStore _tokenStore
 @inject NavigationManager _navigationManager
 
 @if (isChecking)
@@ -17,27 +17,23 @@ else
 
 	[Parameter] public RenderFragment? ChildContent { get; set; }
 
-	protected override async Task OnAfterRenderAsync(bool firstRender)
+	override protected void OnInitialized()
 	{
-		if (firstRender)
+		// Check for token on initialization
+		var token = _tokenStore.Token;
+
+		// Set authorization based on the token presence
+		isAuthorized = !string.IsNullOrEmpty(token);
+
+		if (!isAuthorized)
 		{
-			// Check for token after the first render
-			var token = await _tokenService.GetToken();
-
-			// Set authorization based on the token presence
-			isAuthorized = !string.IsNullOrEmpty(token);
-
-			if (!isAuthorized)
-			{
-				// Redirect if no token is present
-				_navigationManager.NavigateTo("/");
-			}
-			else
-			{
-				// Done checking, allow content to render
-				isChecking = false;
-				StateHasChanged();  // Trigger rerender
-			}
+			// Redirect if no token is present
+			_navigationManager.NavigateTo("/");
+		}
+		else
+		{
+			// Done checking, allow content to render
+			isChecking = false;
 		}
 	}
 }

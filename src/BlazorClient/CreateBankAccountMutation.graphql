@@ -1,8 +1,8 @@
-﻿mutation CreateUserAccount($CreateUserAccountInput: CreateUserAccountInput!){
-    createAccount(input: $CreateUserAccountInput){
-        userId
-        code
-        messages
+﻿mutation CreateBankAccount($input : CreateBankAccountInput!){
+    createBankAccount(input : $input){
+        accountNumber
         success
+        messages
+        balance
     }
 }

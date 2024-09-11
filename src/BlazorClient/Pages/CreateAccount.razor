@@ -1,8 +1,12 @@
 ﻿@page "/createAccount"
 
+<PageTitle>Create Bank Account</PageTitle>
 
-<CreateAccountForm></CreateAccountForm>
-
+<RouteGuard>
+	<MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex mt-4">
+		<CreateAccountForm></CreateAccountForm>
+	</MudContainer>
+</RouteGuard>
 
 @code {
 

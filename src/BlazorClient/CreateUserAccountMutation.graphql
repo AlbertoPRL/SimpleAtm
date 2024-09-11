@@ -1,0 +1,8 @@
+﻿mutation CreateUserAccount($CreateUserAccountInput: CreateUserAccountInput!){
+    createAccount(input: $CreateUserAccountInput){
+        userId
+        code
+        messages
+        success
+    }
+}
